@@ -67,6 +67,7 @@ boolean             dataFlag               = false;
 boolean             relayFlag              = false;
 boolean             sendFlag               = false;
 boolean             serialDataFlag         = false;
+boolean             NotInASec              = true;
   
 /*********************** Declaration of parameters ********************/
 
@@ -82,6 +83,7 @@ volatile char       empty                = ' ';
 
 int                 j, k, s              = 0;         // for ciklus valtozoja
 int                 relayComPin          = 0;
+byte                cycleVar             = 0;
 
 float               dhtTemp              = 0;
 float               dhtHum               = 0;
@@ -236,6 +238,8 @@ void getGPSDateTime(){
     sprintf(sz, "%02d:%02d:%02d ", gps.time.hour(), gps.time.minute(), gps.time.second());
     Serial.print(sz);
   }
+  
+  if (gps.altitude.isValid()) GPSAlt = gps.altitude.meters(); else GPSAlt = -1;
 }
 
 /******************* Processing data *******************/
@@ -255,9 +259,9 @@ void voidBMP085Value(){
   bmpTemp = bmp.readTemperature();
   bmpPres = bmp.readPressure();
   bmpPreshPa = (float)bmpPres / 100;
-  bmpRealAlt = bmp.readAltitude(101325);
-  if (GPSAlt > -1) bmpSeaLev = (bmp.readSealevelPressure(GPSAlt) / 100);
-  else bmpSeaLev = (bmp.readSealevelPressure(bmpRealAlt) / 100);
+  bmpRealAlt = bmp.readAltitude(102425);
+  if (GPSAlt > -1) bmpSeaLev = ((float)bmp.readSealevelPressure(GPSAlt)) / 100;
+  else bmpSeaLev = ((float)bmp.readSealevelPressure(bmpRealAlt)) / 100;
   
   Serial.print("Temperature = ");
   Serial.print((float)bmpTemp, 2);
@@ -267,7 +271,7 @@ void voidBMP085Value(){
   Serial.println(" Pa");
   Serial.print("Sea level = ");
   Serial.print((float)bmpSeaLev, 2);
-  Serial.println(" meters");
+  Serial.println(" hPa");
   Serial.print("Real altitude = ");
   Serial.print((float)bmpRealAlt, 2);
   Serial.println(" meters");
@@ -352,7 +356,62 @@ void voidRTC(){
 
 /******************************** Datas on LCD ***************************/
 void voidLCDData(){
-  if ( val <= 40 ) lcd.setBacklight(LED_ON);
+  if ((( now.second() == 0 ) || ( now.second() == 10 ) || ( now.second() == 20 ) || 
+       ( now.second() == 30 ) || ( now.second() == 40 ) || ( now.second() == 50 )) && NotInASec){
+       cycleVar++;
+       clearScreen();
+       NotInASec = false;
+       }
+  if ((( now.second() != 0 ) && ( now.second() != 10 ) && ( now.second() != 20 ) &&
+       ( now.second() != 30 ) && ( now.second() != 40 ) && ( now.second() != 50 )) && !NotInASec){
+       NotInASec = true;
+       }
+       
+  switch (cycleVar){
+    case 0: 
+      lcd.setCursor(3,1);
+      lcd.print("H: ");
+      lcd.setCursor(6,1);
+      lcd.print(bmpTemp,1);
+      lcd.setCursor(11,1);
+      lcd.print("C");
+      break;
+    case 1: 
+      lcd.setCursor(2,1);
+      lcd.print("Ny:");
+      lcd.setCursor(6,1);
+      lcd.print(bmpPreshPa, 1);
+      lcd.setCursor(12,1);
+      lcd.print("hPa");  
+      break;
+    case 2: 
+      lcd.setCursor(2,1);
+      lcd.print("S: ");
+      lcd.setCursor(5,1);
+      lcd.print(bmpSeaLev, 1);
+      lcd.setCursor(11,1);
+      lcd.print(" hPa");
+      break;
+    case 3: 
+      lcd.setCursor(3,1);
+      lcd.print("A: ");
+      lcd.setCursor(6,1);
+      lcd.print(bmpRealAlt, 1);
+      lcd.setCursor(11,1);
+      lcd.print(" m");
+      break;
+    case 4:
+      lcd.setCursor(1,1);
+      lcd.print("GPS: ");
+      lcd.setCursor(6,1);
+      lcd.print(GPSAlt, 1);
+      lcd.setCursor(13,1);
+      lcd.print("m");
+      break;
+    default:
+      cycleVar = 0;
+  }    
+  /*if ( val <= 40 ) lcd.setBacklight(LED_ON);
   if ( val > 45 ) lcd.setBacklight(LED_OFF);
   if (( now.second() == 0 ) || ( now.second() == 10 ) || ( now.second() == 20 ) || 
        ( now.second() == 30 ) || ( now.second() == 40 ) || ( now.second() == 50 )){
@@ -405,7 +464,7 @@ void voidLCDData(){
     lcd.print(GPSAlt, 1);
     lcd.setCursor(12,1);
     lcd.print("m");
-  }
+  }*/
  /* if ( now.second() == 44 ){
     lcd.setCursor(0,1);
     lcd.print("F: ");
