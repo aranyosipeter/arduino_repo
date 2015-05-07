@@ -26,6 +26,7 @@
 #define  LED_OFF  0
 #define  LED_ON  1
 
+#define DataScreenChange 5
 #define IRQ 2
 #define TX 3
 #define RX 4
@@ -356,14 +357,12 @@ void voidRTC(){
 
 /******************************** Datas on LCD ***************************/
 void voidLCDData(){
-  if ((( now.second() == 0 ) || ( now.second() == 10 ) || ( now.second() == 20 ) || 
-       ( now.second() == 30 ) || ( now.second() == 40 ) || ( now.second() == 50 )) && NotInASec){
+  if ((millis() % DataScreenChange == 0) && NotInASec){
        cycleVar++;
        clearScreen();
        NotInASec = false;
        }
-  if ((( now.second() != 0 ) && ( now.second() != 10 ) && ( now.second() != 20 ) &&
-       ( now.second() != 30 ) && ( now.second() != 40 ) && ( now.second() != 50 )) && !NotInASec){
+  if ((millis() % DataScreenChange != 0) && !NotInASec){
        NotInASec = true;
        }
        
