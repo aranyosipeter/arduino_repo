@@ -49,6 +49,16 @@ static const uint32_t GPSBaud = 9600;
 
 // The serial connection to the GPS device
 SoftwareSerial ss(RXPin, TXPin);
+/*
+2015.06.19 [General]: modultesztek atalakitasa
+*/
+/******************* Device flags ***********************/
+boolean            systemInit              = true;
+boolean            pressSensorInit         = false;
+boolean            lcdIICDisplayInit       = false;
+boolean            realTimeClockInit       = false;
+boolean            wirelessModInit         = false;
+boolean            gpsInit                 = false;          
 
 /******************** Timer values *****************/
 
@@ -120,14 +130,25 @@ float               rxbuff[16];                        // bejovo adatok tombje
 /************************** Setup *******************************/
 void setup()  {
   pinMode(IRQ, INPUT);
+  attachInterrupt(0, voidResponse, LOW);
   Wire.begin();
   Serial.begin(9600);
-  lcdInit();
-  rtcInit();
-  mirfInit();
-  bmpInit();
-  GPSInit();
-  attachInterrupt(0, voidResponse, LOW);
+  
+  if (lcdInit()) lcdIICDisplayInit = true;
+  if (rtcInit()) realTimeClockInit = true;
+  if (mirfInit()) wirelessModInit = true; 
+  if (bmpInit()) pressSensorInit = true;
+  if (GPSInit()) gpsInit = true;
+  
+  if (!pressSensorInit) systemInit = false;
+  
+  if (systemInit){
+    if (lcdIICDisplayInit){
+      lcd.setCursor(6,1);
+      lcd.print(F("System failure!"));
+    }
+    while(1);
+  }
 }
 
 /************************** Loop *******************************/
@@ -150,29 +171,28 @@ void loop(){
 }
 
 /******************* Initalizing BMP085 **********************/
-void bmpInit(){
-    if (!bmp.begin()) {
-    Serial.println("Could not find a valid BMP085 sensor, check wiring!");
-    while (1) {
-    }
-  }
+boolean bmpInit(){
+    if (!bmp.begin()) return false;
+    else return true;
 }
 
 /****************** Initalizing LCD screen ********************/
-void lcdInit(){
+boolean lcdInit(){
   lcd.begin (16,2);  
   lcd.setBacklightPin(BACKLIGHT_PIN,POSITIVE);
   lcd.setBacklight(LED_ON);
+  return true;
 }
 
 /******************** Initalizing RTC ************************/
-void rtcInit(){
+boolean rtcInit(){
   RTC.begin();
   //RTC.adjust(DateTime(__DATE__, __TIME__));
+  return true;
 }
 
 /******************* Initalizing MiRF ************************/
-void mirfInit(){
+boolean mirfInit(){
   Mirf.payload = 32;
   Mirf.channel = 82;
   Mirf.csnPin = 14;
@@ -182,18 +202,25 @@ void mirfInit(){
   Mirf.setRADDR((byte *)"node2");
   Mirf.setTADDR((byte *)"serwl");
   Mirf.config();
+  return true;
 }
 
 /************************* GPS Init ***************************/
-void GPSInit(){
+boolean GPSInit(){
   ss.begin(GPSBaud);
   unsigned long timeOut = millis();
   Serial.println(F("Try to communicate with GPS!"));
   while ((timeOut + 5000) > millis() && gps.charsProcessed() < 10){
     if (ss.available() > 0) gps.encode(ss.read());
   }
-  if ((timeOut + 5000) > millis() && gps.charsProcessed() >= 10) Serial.println(F("GPS connected!"));
-  else Serial.println(F("Can't connect with GPS!"));
+  if ((timeOut + 5000) > millis() && gps.charsProcessed() >= 10){
+    Serial.println(F("GPS connected!"));
+    return true;
+  }
+  else{
+    Serial.println(F("Can't connect with GPS!"));
+    return false;
+  }
 }
 
 /******************** Function for sending packet ********************/
