@@ -12,53 +12,20 @@
 #include <nRF24L01.h>
 #include <MirfHardwareSpiDriver.h>
 
-// Defining LCD pins
-#define keyboard 0x21
-#define I2C_ADDR    0x27  
-#define BACKLIGHT_PIN  3
-#define En_pin  2
-#define Rw_pin  1
-#define Rs_pin  0
-#define D4_pin  4
-#define D5_pin  5
-#define D6_pin  6
-#define D7_pin  7
-#define  LED_OFF  0
-#define  LED_ON  1
+#include "device_init.h"
 
-#define DataScreenChange 5
-#define IRQ 2
-#define TX 3
-#define RX 4
-#define Baudrate 9600
 
-// LCD display connection
-LiquidCrystal_I2C  lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin);
-
-// RTC settings
-RTC_DS1307 RTC;
-
-// BMP085
-Adafruit_BMP085 bmp;
-
-// TinyGPS++
-TinyGPSPlus gps;
-
-static const int RXPin = 4, TXPin = 3;
-static const uint32_t GPSBaud = 9600;
-
-// The serial connection to the GPS device
-SoftwareSerial ss(RXPin, TXPin);
 /*
 2015.06.19 [General]: modultesztek atalakitasa
+2015.06.23 [General]: device_init.h letrehozasa, fuggveny atnevezes/atertelmezes
 */
 /******************* Device flags ***********************/
-boolean            systemInit              = true;
-boolean            pressSensorInit         = false;
-boolean            lcdIICDisplayInit       = false;
-boolean            realTimeClockInit       = false;
-boolean            wirelessModInit         = false;
-boolean            gpsInit                 = false;          
+boolean            systemInit        = true;
+boolean            sensorInit        = false;
+boolean            displayInit       = false;
+boolean            realTimeClockInit = false;
+boolean            wirelessModInit   = false;
+boolean            gpsInit           = false;          
 
 /******************** Timer values *****************/
 
@@ -130,20 +97,20 @@ float               rxbuff[16];                        // bejovo adatok tombje
 /************************** Setup *******************************/
 void setup()  {
   pinMode(IRQ, INPUT);
-  attachInterrupt(0, voidResponse, LOW);
+  attachInterrupt(0, sendResponse, LOW);
   Wire.begin();
   Serial.begin(9600);
   
-  if (lcdInit()) lcdIICDisplayInit = true;
-  if (rtcInit()) realTimeClockInit = true;
+  if (lcdInit())  displayInit = true;
+  if (rtcInit())  realTimeClockInit = true;
   if (mirfInit()) wirelessModInit = true; 
-  if (bmpInit()) pressSensorInit = true;
-  if (GPSInit()) gpsInit = true;
+  if (bmpInit())  sensorInit = true;
+  if (GPSInit())  gpsInit = true;
   
-  if (!pressSensorInit) systemInit = false;
+  if (!sensorInit) systemInit = false;
   
   if (systemInit){
-    if (lcdIICDisplayInit){
+    if (displayInit){
       lcd.setCursor(6,1);
       lcd.print(F("System failure!"));
     }
@@ -153,11 +120,11 @@ void setup()  {
 
 /************************** Loop *******************************/
 void loop(){
-  voidRTC();
+  printRealTime();
   getGPSDateTime();
   voidLCDData();
-  //voidProcess();
-  voidBMP085Value();
+  //processPacket();
+  getSensorData();
   voidSerialData();
   if (commComp) {
     for ( k = 0; k < s; k++ ){
@@ -170,63 +137,10 @@ void loop(){
   }
 }
 
-/******************* Initalizing BMP085 **********************/
-boolean bmpInit(){
-    if (!bmp.begin()) return false;
-    else return true;
-}
-
-/****************** Initalizing LCD screen ********************/
-boolean lcdInit(){
-  lcd.begin (16,2);  
-  lcd.setBacklightPin(BACKLIGHT_PIN,POSITIVE);
-  lcd.setBacklight(LED_ON);
-  return true;
-}
-
-/******************** Initalizing RTC ************************/
-boolean rtcInit(){
-  RTC.begin();
-  //RTC.adjust(DateTime(__DATE__, __TIME__));
-  return true;
-}
-
-/******************* Initalizing MiRF ************************/
-boolean mirfInit(){
-  Mirf.payload = 32;
-  Mirf.channel = 82;
-  Mirf.csnPin = 14;
-  Mirf.cePin = 15;
-  Mirf.spi = &MirfHardwareSpi;
-  Mirf.init();
-  Mirf.setRADDR((byte *)"node2");
-  Mirf.setTADDR((byte *)"serwl");
-  Mirf.config();
-  return true;
-}
-
-/************************* GPS Init ***************************/
-boolean GPSInit(){
-  ss.begin(GPSBaud);
-  unsigned long timeOut = millis();
-  Serial.println(F("Try to communicate with GPS!"));
-  while ((timeOut + 5000) > millis() && gps.charsProcessed() < 10){
-    if (ss.available() > 0) gps.encode(ss.read());
-  }
-  if ((timeOut + 5000) > millis() && gps.charsProcessed() >= 10){
-    Serial.println(F("GPS connected!"));
-    return true;
-  }
-  else{
-    Serial.println(F("Can't connect with GPS!"));
-    return false;
-  }
-}
-
 /******************** Function for sending packet ********************/
-void voidPacketSend(){
+boolean sendPacket(){
     txbuff[0] = devID;
-    txbuff[1] = commandWl;
+    txbuff[1] = 0;
     txbuff[2] = 0;
     txbuff[3] = 0;
     txbuff[4] = 0;
@@ -236,19 +150,21 @@ void voidPacketSend(){
     Mirf.send((byte *)&txbuff);
     while(Mirf.isSending()){
     }
+    if (Mirf.isSending()) return true; 
+    else return false;
 }
 
 /****************** Filling up server data *******************/
-void voidGetPacket(){
+void getPacket(){
   if (Mirf.dataReady() == true){
     Mirf.getData((byte *) &rxbuff); 
   }
 }
 
 /********************** Response ***********************/
-void voidResponse(){
-  voidGetPacket();
-  voidPacketSend();
+void sendResponse(){
+  getPacket();
+  sendPacket();
   dataRec = true;
 }
 
@@ -271,19 +187,18 @@ void getGPSDateTime(){
 }
 
 /******************* Processing data *******************/
-void voidProcess(){
-  receiveID = rxbuff[0];
+void processPacket(){
+  receiveID      = rxbuff[0];
   receiveCommand = rxbuff[1];
-  dhtTemp = rxbuff[2];
-  dhtHum = rxbuff[3];
-  bmpTemp = rxbuff[4];
-  bmpPreshPa = rxbuff[5];
-  val = rxbuff[6];
-  //light =  val / 10.24; 
+  dhtTemp        = rxbuff[2];
+  dhtHum         = rxbuff[3];
+  bmpTemp        = rxbuff[4];
+  bmpPreshPa     = rxbuff[5];
+  val            = rxbuff[6]; 
 }
 
 /********************* BMP085 Value **************************/
-void voidBMP085Value(){  
+void getSensorData(){  
   bmpTemp = bmp.readTemperature();
   bmpPres = bmp.readPressure();
   bmpPreshPa = (float)bmpPres / 100;
@@ -307,7 +222,7 @@ void voidBMP085Value(){
 }
 
 /********************* Actual time *********************/
-void voidRTC(){
+void printRealTime(){
   now = RTC.now();
 
   lcd.setCursor(0,0);
@@ -372,14 +287,6 @@ void voidRTC(){
     lcd.setCursor(14,0);
     lcd.print(now.minute(), DEC);
   }
-
-  //lcd.print(":");
-  //lcd.print(now.second(), DEC);
-
-  /*if(now.second()!=seconds){
-   * lcd.clear();
-   * seconds=now.second();
-  }*/    
 } 
 
 /******************************** Datas on LCD ***************************/
@@ -437,82 +344,6 @@ void voidLCDData(){
     default:
       cycleVar = 0;
   }    
-  /*if ( val <= 40 ) lcd.setBacklight(LED_ON);
-  if ( val > 45 ) lcd.setBacklight(LED_OFF);
-  if (( now.second() == 0 ) || ( now.second() == 10 ) || ( now.second() == 20 ) || 
-       ( now.second() == 30 ) || ( now.second() == 40 ) || ( now.second() == 50 )){
-       clearScreen();
-       }
-  if ( now.second() >= 0 && now.second() < 10 ){
-    lcd.setCursor(3,1);
-    lcd.print("H: ");
-    lcd.setCursor(6,1);
-    lcd.print(bmpTemp,1);
-    lcd.setCursor(11,1);
-    lcd.print("C");
-  }
-  if ( now.second() >= 10 && now.second() < 20 ){
-    lcd.setCursor(2,1);
-    lcd.print("Ny:");
-    lcd.setCursor(6,1);
-    lcd.print(bmpPreshPa, 1);
-    lcd.setCursor(11,1);
-    lcd.print("hPa");  
-  }
-  if ( now.second() > 20 && now.second() < 30 ){
-    lcd.setCursor(3,1);
-    lcd.print("S: ");
-    lcd.setCursor(6,1);
-    lcd.print(bmpSeaLev, 1);
-    lcd.setCursor(11,1);
-    lcd.print("hPa");
-  }
-  if ( now.second() > 30 && now.second() < 40 ){
-    lcd.setCursor(3,1);
-    lcd.print("rA: ");
-    lcd.setCursor(7,1);
-    lcd.print(bmpRealAlt, 1);
-    lcd.setCursor(11,1);
-    lcd.print(" m");
-  }
-  if ( now.second() > 40 && now.second() < 50 ){
-    lcd.setCursor(3,1);
-    lcd.print("H: ");
-    lcd.setCursor(6,1);
-    lcd.print(bmpTemp, 1);
-    lcd.setCursor(11,1);
-    lcd.print("C");
-  }
-  if ( now.second() > 50 && now.second() < 60 ){
-    lcd.setCursor(1,1);
-    lcd.print("GPS: ");
-    lcd.setCursor(6,1);
-    lcd.print(GPSAlt, 1);
-    lcd.setCursor(12,1);
-    lcd.print("m");
-  }*/
- /* if ( now.second() == 44 ){
-    lcd.setCursor(0,1);
-    lcd.print("F: ");
-    lcd.setCursor(3,1);
-    lcd.print(val, DEC);
-  
-    lcd.setCursor(0,);
-    lcd.print("P: ");
-    lcd.setCursor(3,1);
-    lcd.print(val, DEC);
-  }
-  if ( now.second() == 59 ){
-    lcd.setCursor(0,1);
-    lcd.print("F: ");
-    lcd.setCursor(3,1);
-    lcd.print(val, DEC);
-  
-    lcd.setCursor(0,);
-    lcd.print("P: ");
-    lcd.setCursor(3,1);
-    lcd.print(val, DEC);
-  }*/
 }
 
 /*************************** SerialEvent *********************/
