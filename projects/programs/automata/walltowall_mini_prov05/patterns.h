@@ -39,9 +39,7 @@ void cubeOff(){
 void randomLED(){
   // r - Rows, c - Colums randomize them | i - index variable | analogVal - value of analog pin reading | digitalVal - transformed value of the reading
   boolean plusMinus;
-  byte r = 0;
-  byte c = 0;
-  byte i = 0;
+  byte r, c, i, j = 0;
   byte digitalVal = 0;
   int analogVal = 0; 
   
@@ -52,24 +50,27 @@ void randomLED(){
     
     analogVal = analogRead(7);
     
-    if (analogVal <= 255) digitalVal = 0;
-    else if (analogVal <= 511) digitalVal = 1;
-    else if (analogVal <= 765) digitalVal = 2;
-    else if (analogVal <= 1023) digitalVal = 3;
+    if (analogVal <= 255) digitalVal = 1;
+    else if (analogVal <= 511) digitalVal = 2;
+    else if (analogVal <= 765) digitalVal = 3;
+    else if (analogVal <= 1023) digitalVal = 4;
     
     // Let's randomize them again in an unique way
     if (plusMinus) {
-      if (!((r + digitalVal) > 3)) r = r + digitalVal;
+      if (!((c + digitalVal) > 15)) c = c + digitalVal;
     }
     else if (!plusMinus) {
-      if (!((r - digitalVal) <= 0)) r = r - digitalVal;
+      if (!((c - digitalVal) <= 0)) c = c - digitalVal;
     }
-    
     digitalWrite(PlanePin[r],LOW);
-    digitalWrite(LEDPin[c],HIGH);
-    delay(200);
+    for(j = 0; j < 50; j++){ 
+      digitalWrite(LEDPin[c],HIGH);
+      delay((digitalVal * 2));
+      digitalWrite(LEDPin[c],LOW);
+      delay((digitalVal * 2));
+    }
     digitalWrite(PlanePin[r],HIGH);
-    digitalWrite(LEDPin[c],LOW);
+    //delay(200);
   }
   
   cubeOff();
