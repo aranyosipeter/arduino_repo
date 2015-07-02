@@ -56,12 +56,9 @@ void randomLED(){
     else if (analogVal <= 1023) digitalVal = 4;
     
     // Let's randomize them again in an unique way
-    if (plusMinus) {
-      if (!((c + digitalVal) > 15)) c = c + digitalVal;
-    }
-    else if (!plusMinus) {
-      if (!((c - digitalVal) <= 0)) c = c - digitalVal;
-    }
+    if (plusMinus) if (!((c + digitalVal) > 15)) c = c + digitalVal;
+    else if (!((c - digitalVal) <= 0)) c = c - digitalVal;
+    
     digitalWrite(PlanePin[r],LOW);
     for(j = 0; j < 50; j++){ 
       digitalWrite(LEDPin[c],HIGH);
