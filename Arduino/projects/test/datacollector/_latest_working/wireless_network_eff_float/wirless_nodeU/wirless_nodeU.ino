@@ -19,80 +19,6 @@
 2015.06.19 [General]: modultesztek atalakitasa
 2015.06.23 [General]: device_init.h letrehozasa, fuggveny atnevezes/atertelmezes
 */
-/******************* Device flags ***********************/
-boolean            systemInit        = true;
-boolean            sensorInit        = false;
-boolean            displayInit       = false;
-boolean            realTimeClockInit = false;
-boolean            wirelessModInit   = false;
-boolean            gpsInit           = false;          
-
-/******************** Timer values *****************/
-
-unsigned long      alarmTimer              = 0;
-unsigned long      tmpTimer                = 0;
-unsigned long      time                    = 0;
-unsigned long      timeOut                 = 0;
-unsigned long      clearTime               = 0;
-unsigned long      clearPrevTime           = 0;
-
-/************************* Flags *******************/
-
-boolean             dataRec                = false;      // nincs hasznalatban
-boolean             handShake              = false;      // kommunikacio szinkron flag
-boolean             commComp               = false;
-boolean             dataFlag               = false;
-boolean             relayFlag              = false;
-boolean             sendFlag               = false;
-boolean             serialDataFlag         = false;
-boolean             NotInASec              = true;
-  
-/*********************** Declaration of parameters ********************/
-
-char                commandChar;
-char                relayComChar;
-char                command[16]          = "";
-char                test[16]             = "data";
-char                dataChar[5]          = "data";
-char                relayChar[6]         = "relay";
-volatile char       trueChar[5]          = "TRUE";
-volatile char       falseChar[6]         = "FALSE";
-volatile char       empty                = ' ';
-
-int                 j, k, s              = 0;         // for ciklus valtozoja
-int                 relayComPin          = 0;
-byte                cycleVar             = 0;
-
-float               dhtTemp              = 0;
-float               dhtHum               = 0;
-int                 val                  = 0;
-float               light                = 0;
-long                bmpPres              = 0;
-float               bmpPreshPa           = 0;
-
-float               dhtFah               = 0;
-float               bmpTemp              = 0;
-float               bmpSeaLev            = 0;
-float               bmpRealAlt           = 0;
-double              GPSAlt               = 0;
-byte                relayBuff            = B00000000; // kimeno rele vezerlo adatbajt
-
-DateTime            now;
-int                 hours                = 0;
-int                 minutes              = 0;
-int                 seconds              = 0;
-unsigned long       mills                = 0;
-unsigned long       subtract             = 0;
-/******************** Communication of nodes ***********************/
-
-byte                devID                  = B00000101;
-byte                commandWl              = B00000000;
-byte                receiveCommand         = B00000000;
-byte                receiveID              = B00000000;
-
-/******************* Buffers for the transreceiver *****************/
-float               txbuff[16];                        // kuldesre varo adatok tombje
-float               rxbuff[16];                        // bejovo adatok tombje
 
 /************************** Setup *******************************/
 void setup()  {
@@ -139,14 +65,22 @@ void loop(){
 
 /******************** Function for sending packet ********************/
 boolean sendPacket(){
-    txbuff[0] = devID;
-    txbuff[1] = 0;
-    txbuff[2] = 0;
-    txbuff[3] = 0;
-    txbuff[4] = 0;
-    txbuff[5] = 0;
-    txbuff[6] = 0;
-    txbuff[7] = 0;
+    txbuff[0]  = devID;
+    txbuff[1]  = commandWl;
+    txbuff[2]  = dhtTemp;
+    txbuff[3]  = dhtHum;
+    txbuff[4]  = bmpPreshPa;
+    txbuff[5]  = bmpTemp;
+    txbuff[6]  = GPSAlt;
+    txbuff[7]  = bmpSeaLev;
+    txbuff[8]  = 0;
+    txbuff[9]  = 0;
+    txbuff[10] = 0;
+    txbuff[11] = 0;
+    txbuff[12] = 0;
+    txbuff[13] = 0;
+    txbuff[14] = 0;
+    txbuff[15] = 0;
     Mirf.send((byte *)&txbuff);
     while(Mirf.isSending()){
     }
@@ -189,12 +123,7 @@ void getGPSDateTime(){
 /******************* Processing data *******************/
 void processPacket(){
   receiveID      = rxbuff[0];
-  receiveCommand = rxbuff[1];
-  dhtTemp        = rxbuff[2];
-  dhtHum         = rxbuff[3];
-  bmpTemp        = rxbuff[4];
-  bmpPreshPa     = rxbuff[5];
-  val            = rxbuff[6]; 
+  receiveCommand = rxbuff[1]; 
 }
 
 /********************* BMP085 Value **************************/

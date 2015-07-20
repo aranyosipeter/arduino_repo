@@ -1,22 +1,4 @@
-// Defining LCD pins
-#define keyboard 0x21
-#define I2C_ADDR    0x27  
-#define BACKLIGHT_PIN  3
-#define En_pin  2
-#define Rw_pin  1
-#define Rs_pin  0
-#define D4_pin  4
-#define D5_pin  5
-#define D6_pin  6
-#define D7_pin  7
-#define  LED_OFF  0
-#define  LED_ON  1
-
-#define DataScreenChange 5
-#define IRQ 2
-#define TX 3
-#define RX 4
-#define Baudrate 9600
+#include "declarations.h"
 
 // LCD display connection
 LiquidCrystal_I2C  lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin);
@@ -65,8 +47,8 @@ boolean mirfInit(){
   Mirf.cePin = 15;
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();
-  Mirf.setRADDR((byte *)"node2");
-  Mirf.setTADDR((byte *)"serwl");
+  Mirf.setRADDR((byte *)"nodeU");
+  Mirf.setTADDR((byte *)"servU");
   Mirf.config();
   return true;
 }
