@@ -13,11 +13,15 @@
 #include <MirfHardwareSpiDriver.h>
 
 #include "device_init.h"
+#include "wireless.h"
+#include "gps.h"
 
 
 /*
 2015.06.19 [General]: modultesztek atalakitasa
 2015.06.23 [General]: device_init.h letrehozasa, fuggveny atnevezes/atertelmezes
+2015.07.20 [General]: declarations.h letrehozasa
+2015.07.22 [Modul]: nRF modul fuggvenyeinek atalakitasa => wireless.h
 */
 
 /************************** Setup *******************************/
@@ -61,69 +65,6 @@ void loop(){
     commComp = false;
     s = 0;
   }
-}
-
-/******************** Function for sending packet ********************/
-boolean sendPacket(){
-    txbuff[0]  = devID;
-    txbuff[1]  = commandWl;
-    txbuff[2]  = dhtTemp;
-    txbuff[3]  = dhtHum;
-    txbuff[4]  = bmpPreshPa;
-    txbuff[5]  = bmpTemp;
-    txbuff[6]  = GPSAlt;
-    txbuff[7]  = bmpSeaLev;
-    txbuff[8]  = 0;
-    txbuff[9]  = 0;
-    txbuff[10] = 0;
-    txbuff[11] = 0;
-    txbuff[12] = 0;
-    txbuff[13] = 0;
-    txbuff[14] = 0;
-    txbuff[15] = 0;
-    Mirf.send((byte *)&txbuff);
-    while(Mirf.isSending()){
-    }
-    if (Mirf.isSending()) return true; 
-    else return false;
-}
-
-/****************** Filling up server data *******************/
-void getPacket(){
-  if (Mirf.dataReady() == true){
-    Mirf.getData((byte *) &rxbuff); 
-  }
-}
-
-/********************** Response ***********************/
-void sendResponse(){
-  getPacket();
-  sendPacket();
-  dataRec = true;
-}
-
-/******************** GPS Altitude ***********************/
-void getGPSDateTime(){
-  while (ss.available()) gps.encode(ss.read());
-  if (gps.date.isValid()){
-    char sz[32];
-    sprintf(sz, "%02d/%02d/%02d ", gps.date.month(), gps.date.day(), gps.date.year());
-    Serial.print(sz);
-  }
-  
-  if (gps.time.isValid()){
-    char sz[32];
-    sprintf(sz, "%02d:%02d:%02d ", gps.time.hour(), gps.time.minute(), gps.time.second());
-    Serial.print(sz);
-  }
-  
-  if (gps.altitude.isValid()) GPSAlt = gps.altitude.meters(); else GPSAlt = -1;
-}
-
-/******************* Processing data *******************/
-void processPacket(){
-  receiveID      = rxbuff[0];
-  receiveCommand = rxbuff[1]; 
 }
 
 /********************* BMP085 Value **************************/
