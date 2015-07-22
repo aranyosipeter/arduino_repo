@@ -90,6 +90,8 @@ byte                receiveCommand         = B00000000;
 byte                receiveID              = B00000000;
 
 /******************* Buffers for the transreceiver *****************/
-float               txbuff[15];                        // kuldesre varo adatok tombje
-float               rxbuff[15];                        // bejovo adatok tombje
+float               txbuff[7];                        // kuldesre varo adatok tombje
+float               rxbuff[7];                        // bejovo adatok tombje
+
+
 
