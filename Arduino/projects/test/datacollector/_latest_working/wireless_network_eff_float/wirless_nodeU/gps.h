@@ -4,7 +4,7 @@ void getGPSDateTime(){
   if (gps.date.isValid()){
     char sz[32];
     sprintf(sz, "%02d/%02d/%02d ", gps.date.month(), gps.date.day(), gps.date.year());
-    Serial.print(sz);
+    if (debugFlag) Serial.print(sz);
   }
   
   if (gps.time.isValid()){

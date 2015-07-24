@@ -24,7 +24,12 @@ boolean            sensorInit        = false;
 boolean            displayInit       = false;
 boolean            realTimeClockInit = false;
 boolean            wirelessModInit   = false;
-boolean            gpsInit           = false;          
+boolean            gpsInit           = false; 
+
+/***********************************************************************/
+/*                          Device settings                            */
+/***********************************************************************/
+boolean            debugFlag         = false;
 
 /******************** Timer values *****************/
 
