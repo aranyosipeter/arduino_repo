@@ -2,6 +2,7 @@
 
 /*
 2015.07.24 [General]: Created/add header file => copy existed functions
+2015.07.27 [Modification]: Delete all code in connection with GPS module
 */
 
 /**************************************************************************/
@@ -12,8 +13,7 @@ void getSensorData(){
   bmpPres = bmp.readPressure();
   bmpPreshPa = (float)bmpPres / 100;
   bmpRealAlt = bmp.readAltitude(102425);
-  /*if (GPSAlt > -1) bmpSeaLev = ((float)bmp.readSealevelPressure(GPSAlt)) / 100;
-  else */bmpSeaLev = ((float)bmp.readSealevelPressure(bmpRealAlt)) / 100;
+  bmpSeaLev = ((float)bmp.readSealevelPressure(bmpRealAlt)) / 100;
   
   if (debugFlag) {
     Serial.print("Temperature = ");

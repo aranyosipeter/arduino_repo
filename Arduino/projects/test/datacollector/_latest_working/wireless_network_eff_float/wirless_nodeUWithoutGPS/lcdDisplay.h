@@ -2,6 +2,7 @@
 
 /*
 2015.07.24 [General]: Created/add header file => copy existed methods
+2015.07.27 [Modification]: Delete all code in connection with GPS module
  */
 
 
@@ -81,19 +82,19 @@ void printRealTime(){
     lcd.setCursor(14,0);
     lcd.print(now.minute(), DEC);
   }
-  Serial.println(F("Current time is on display!"));
 } 
 
 /**************************************************************************/
 /*                        Show processed data                             */
 /**************************************************************************/
 void printLCDData(){
-  if ((millis() % DataScreenChange == 0) && NotInASec){
+  if ((millis() - time  >= DataScreenChange) && NotInASec){
     cycleVar++;
     clearScreen();
     NotInASec = false;
+    time = millis();
   }
-  if ((millis() % DataScreenChange != 0) && !NotInASec){
+  if ((millis() - time  < DataScreenChange) && !NotInASec){
     NotInASec = true;
   }
 
@@ -130,14 +131,8 @@ void printLCDData(){
     lcd.setCursor(11,1);
     lcd.print(" m");
     break;
-  /*case 4:
-    lcd.setCursor(1,1);
-    lcd.print("GPS: ");
-    lcd.setCursor(6,1);
-    lcd.print(GPSAlt, 1);
-    lcd.setCursor(13,1);
-    lcd.print("m");
-    break;*/
+  case 4:
+    break;
   default:
     cycleVar = 0;
   }    

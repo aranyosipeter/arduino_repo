@@ -1,3 +1,10 @@
+// nRF24 module methods
+
+/*
+2015.07.24 [General]: Created/add header file => copy existed methods
+2015.07.27 [Modification]: Delete all mods in connection with GPS module
+*/
+
 /******************** Function for sending packet ********************/
 boolean sendPacket(){
     txbuff[0]  = devID;
@@ -6,7 +13,7 @@ boolean sendPacket(){
     txbuff[3]  = dhtHum;
     txbuff[4]  = bmpPreshPa;
     txbuff[5]  = bmpTemp;
-    txbuff[6]  = 0; //GPSAlt;
+    txbuff[6]  = 0; 
     txbuff[7]  = bmpSeaLev;
     Mirf.send((byte *)&txbuff);
     while(Mirf.isSending()){

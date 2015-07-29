@@ -1,3 +1,9 @@
+// Declare all constans/variables
+
+/*
+2015.07.27 [Modification]: Delete all variables/constans in connection with GPS module
+*/
+
 // Defining LCD pins
 #define keyboard 0x21
 #define I2C_ADDR    0x27  
@@ -12,19 +18,17 @@
 #define  LED_OFF  0
 #define  LED_ON  1
 
-#define DataScreenChange 50
+#define DataScreenChange 5000
 #define IRQ 2
-#define TX 3
-#define RX 4
-#define Baudrate 9600
 
-/******************* Device flags ***********************/
+/***********************************************************************/
+/*                            Device flags                             */
+/***********************************************************************/
 boolean            systemInit        = true;
 boolean            sensorInit        = false;
 boolean            displayInit       = false;
 boolean            realTimeClockInit = false;
 boolean            wirelessModInit   = false;
-//boolean            gpsInit           = false; 
 
 /***********************************************************************/
 /*                          Device settings                            */
@@ -69,8 +73,6 @@ byte                cycleVar             = 0;
 
 float               dhtTemp              = 0;
 float               dhtHum               = 0;
-int                 val                  = 0;
-float               light                = 0;
 long                bmpPres              = 0;
 float               bmpPreshPa           = 0;
 
@@ -78,7 +80,6 @@ float               dhtFah               = 0;
 float               bmpTemp              = 0;
 float               bmpSeaLev            = 0;
 float               bmpRealAlt           = 0;
-//double              GPSAlt               = 0;
 byte                relayBuff            = B00000000; // kimeno rele vezerlo adatbajt
 
 DateTime            now;
