@@ -131,8 +131,6 @@ void printLCDData(){
     lcd.setCursor(11,1);
     lcd.print(" m");
     break;
-  case 4:
-    break;
   default:
     cycleVar = 0;
   }    

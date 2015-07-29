@@ -53,7 +53,7 @@ void setup()  {
 void loop(){ 
   printRealTime();
   printLCDData();
-  //processPacket();
+  processPacket();
   getSensorData();
   printSerialData();
   if (commComp) {
@@ -66,7 +66,4 @@ void loop(){
     s = 0;
   }
 }
-
-
-
 

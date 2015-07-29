@@ -13,7 +13,7 @@ void getSensorData(){
   bmpPres = bmp.readPressure();
   bmpPreshPa = (float)bmpPres / 100;
   bmpRealAlt = bmp.readAltitude(102425);
-  bmpSeaLev = ((float)bmp.readSealevelPressure(bmpRealAlt)) / 100;
+  bmpSeaLev = ((float)bmp.readSealevelPressure(124)) / 100;
   
   if (debugFlag) {
     Serial.print("Temperature = ");
