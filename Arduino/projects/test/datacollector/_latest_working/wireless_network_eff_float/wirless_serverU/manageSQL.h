@@ -1,3 +1,9 @@
+// Manage SQL queries
+
+/*
+
+*/
+
 /*********************************** Data log to SQL database *********************************/
 void dataLogSQL(){
     char query[64];

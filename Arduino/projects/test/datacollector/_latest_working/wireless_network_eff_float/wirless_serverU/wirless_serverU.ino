@@ -22,7 +22,7 @@ void setup(){
   digitalWrite(YELLOWLED, HIGH);
   mirfInit();
   attachInterrupt(0, voidResponse, LOW);
-  //Serial.begin(9600);
+  Serial.begin(9600);
   Ethernet.begin(mac_addr);
   commInit();
   Serial.println("Controller started!"); 

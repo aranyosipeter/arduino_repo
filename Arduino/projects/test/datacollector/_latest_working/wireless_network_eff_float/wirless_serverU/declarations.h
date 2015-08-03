@@ -1,3 +1,10 @@
+// Declare all constans/variables
+
+/*
+2015.07.27 [Modification]: Delete all variables/constans in connection with GPS module
+*/
+
+
 #define IRQ 2
 #define GREENLED 6
 #define YELLOWLED 16
@@ -33,7 +40,6 @@ float               val                  = 0;
 float               bmpTemp              = 0;
 float               bmpPreshPa           = 0;
 float               bmpSeaLev            = 0;
-float               GPSAlt               = 0;
 
 /*********************************************************************************************************/
 /*                                             MySQL server                                              */

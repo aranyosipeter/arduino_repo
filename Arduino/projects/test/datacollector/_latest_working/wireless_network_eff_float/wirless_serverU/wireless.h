@@ -1,3 +1,10 @@
+// nRF24 module methods
+
+/*
+2015.07.24 [General]: Created/add header file => copy existed methods
+2015.07.27 [Modification]: Delete all mods in connection with GPS module
+*/
+
 /******************************* Function for sending packet ***********************************/
 void voidPacketSend(byte mode){
     float txbuff[7];
@@ -39,8 +46,7 @@ void voidGetPacket(){
   dhtHum         = rxbuff[3];
   bmpPreshPa     = rxbuff[4];
   bmpTemp        = rxbuff[5];
-  GPSAlt         = rxbuff[6];
-  bmpSeaLev      = rxbuff[7];
+  bmpSeaLev      = rxbuff[6];
   dataRec = true;
 }
 

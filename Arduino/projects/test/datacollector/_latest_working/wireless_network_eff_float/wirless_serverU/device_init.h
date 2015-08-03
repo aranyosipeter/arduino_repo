@@ -1,3 +1,9 @@
+// Initialize device connections/settings
+
+/*
+
+*/
+
 #include "declarations.h"
 
 Connector my_conn;        // The Connector/Arduino reference
@@ -16,12 +22,12 @@ void commInit(){
 
 /*************************************** Mirf init *********************************************/
 void mirfInit(){
-  Mirf.payload = 16;
-  Mirf.channel = 80;
+  Mirf.payload = 32;
+  Mirf.channel = 82;
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();
-  Mirf.setRADDR((byte *)"serdb");
-  Mirf.setTADDR((byte *)"serwl"); 
+  Mirf.setRADDR((byte *)"servU");
+  Mirf.setTADDR((byte *)"nodeU"); 
   Mirf.config();  
 }
 
