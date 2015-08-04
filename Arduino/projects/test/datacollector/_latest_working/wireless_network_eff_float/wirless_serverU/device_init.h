@@ -6,9 +6,9 @@
 
 #include "declarations.h"
 
-Connector my_conn;        // The Connector/Arduino reference
+//Connector my_conn;        // The Connector/Arduino reference
 
-/************************************* Communication Init *************************************/
+/************************************* Communication Init *************************************
 void commInit(){
   Serial.println("Connecting...");
   if (my_conn.mysql_connect(server_name, 3306, user, password)) {

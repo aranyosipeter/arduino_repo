@@ -6,9 +6,9 @@
 */
 
 /******************************* Function for sending packet ***********************************/
-void voidPacketSend(byte mode){
+void sendPacket(/*byte mode*/){
     float txbuff[7];
-    if (mode == 0) {
+    //if (mode == 0) {
       txbuff[0] = devID;
       txbuff[1] = command;
       txbuff[2] = 0;
@@ -17,9 +17,8 @@ void voidPacketSend(byte mode){
       txbuff[5] = 0;
       txbuff[6] = 0;
       txbuff[7] = 0;
-    }
-    else if (mode == 1) {
-      // Relek kiiratasa
+    //}
+    /*else if (mode == 1) {
       txbuff[0] = devID;
       txbuff[1] = command;
       txbuff[2] = 0;
@@ -28,14 +27,14 @@ void voidPacketSend(byte mode){
       txbuff[5] = 0;
       txbuff[6] = 0;
       txbuff[7] = 0;
-    }
+    }*/
     Mirf.send((byte *)&txbuff);
     while(Mirf.isSending()){
     }
 }
 
 /*********************************** Filling up server data **********************************/
-void voidGetPacket(){
+void getPacket(){
   float rxbuff[7];
   if (Mirf.dataReady() == true){
     Mirf.getData((byte *) &rxbuff);
@@ -48,12 +47,13 @@ void voidGetPacket(){
   bmpTemp        = rxbuff[5];
   bmpSeaLev      = rxbuff[6];
   dataRec = true;
+  blinkYellowOnTime();
 }
 
 /****************************************** Response *******************************************/
-void voidResponse(){
-  voidGetPacket();
-  voidPacketSend(1);
+void sendResponse(){
+  getPacket();
+  sendPacket();
 }
 
 

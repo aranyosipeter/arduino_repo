@@ -13,8 +13,8 @@ boolean sendPacket(){
     txbuff[3]  = dhtHum;
     txbuff[4]  = bmpPreshPa;
     txbuff[5]  = bmpTemp;
-    txbuff[6]  = 0; 
-    txbuff[7]  = bmpSeaLev;
+    txbuff[6]  = bmpSeaLev;
+    txbuff[7]  = 0; 
     Mirf.send((byte *)&txbuff);
     while(Mirf.isSending()){
     }

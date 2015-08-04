@@ -4,7 +4,7 @@
 
 */
 
-/*********************************** Data log to SQL database *********************************/
+/*********************************** Data log to SQL database *********************************
 void dataLogSQL(){
     char query[64];
     for(int i = 0; i < 8; i++) {
@@ -43,6 +43,6 @@ void dataLogSQL(){
     Serial.println(results);
     Serial.println();
     Serial.println("UPDATED!!");
-}
+}*/
 
 

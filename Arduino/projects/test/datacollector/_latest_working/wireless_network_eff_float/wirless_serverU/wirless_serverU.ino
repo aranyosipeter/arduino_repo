@@ -2,17 +2,19 @@
 #include <nRF24L01.h>
 #include <MirfHardwareSpiDriver.h>
 
-#include <Ethernet.h>
+//#include <Ethernet.h>
 #include <SPI.h>
-#include <sha1.h>
+//#include <sha1.h>
 //#include <avr/pgmspace.h>
 #include <stdlib.h>
-#include <mysql.h>
-#include <EthernetClient.h>
+//#include <mysql.h>
+//#include <EthernetClient.h>
 
 #include "device_init.h"
+#include "ledControl.h"
 #include "wireless.h"
 #include "manageSQL.h"
+#include "serialData.h"
 
 /****************************************** Setup ************************************/
 void setup(){
@@ -21,17 +23,22 @@ void setup(){
   pinMode(YELLOWLED, OUTPUT);
   digitalWrite(YELLOWLED, HIGH);
   mirfInit();
-  attachInterrupt(0, voidResponse, LOW);
+  attachInterrupt(0, getPacket, LOW);
   Serial.begin(9600);
-  Ethernet.begin(mac_addr);
-  commInit();
+  //Ethernet.begin(mac_addr);
+  //commInit();
   Serial.println("Controller started!"); 
 }
 
 /******************************************* Loop ***********************************/
 void loop(){
+  printDataSerial();
+  delay(5000);
+  sendPacket();
   // Flag of connection fail is set!
-  if (/*( my_conn.is_available() == 0 ) ||*/ ( my_conn.is_connected() == 0 )){
+  ///*( my_conn.is_available() == 0 ) ||*/
+  /*
+  if (( my_conn.is_connected() == 0 )){
     Serial.println("Problem with connection!");
     connectionFail = true;
     digitalWrite(YELLOWLED, HIGH);
@@ -59,7 +66,8 @@ void loop(){
     attachInterrupt(0, voidResponse, LOW);
     dataRec = false;
   }
-  delay(37);
+  */
+  
 } 
 
 
