@@ -13,16 +13,45 @@ RTC_DS1307 RTC;
 // BMP085
 Adafruit_BMP085 bmp;
 
+//DHT11
+dht11 DHT11;
+
 /******************* Initalizing BMP085 **********************/
 boolean bmpInit(){
     if (!bmp.begin()) return false;
     else return true;
 }
 
+/********************** DHT11 Check **************************/
+boolean DHT11Check(){
+  boolean returnValue = true;
+  int chk = DHT11.read(DHT11PIN);
+  
+  if (serialDataFlag) Serial.print("Read sensor: ");
+  switch (chk){
+    case 0:
+      if (serialDataFlag) Serial.println("OK");
+      break;
+    case -1: 
+      if (serialDataFlag) Serial.println("Checksum error"); 
+      returnValue = false;
+      break;
+    case -2: 
+      if (serialDataFlag) Serial.println("Time out error"); 
+      returnValue = false;
+      break;
+    default: 
+      if (serialDataFlag) Serial.println("Unknown error");
+      returnValue = false; 
+      break;
+    }
+  return returnValue;
+}
+
 /****************** Initalizing LCD screen ********************/
 boolean lcdInit(){
   lcd.begin (16,2);  
-  lcd.setBacklightPin(BACKLIGHT_PIN,POSITIVE);
+  lcd.setBacklightPin(BACKLIGHT_PIN, POSITIVE);
   lcd.setBacklight(LED_ON);
   return true;
 }

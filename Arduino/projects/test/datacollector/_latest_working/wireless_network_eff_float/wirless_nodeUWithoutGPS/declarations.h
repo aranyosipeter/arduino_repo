@@ -20,6 +20,7 @@
 
 #define DataScreenChange 5000
 #define IRQ 2
+#define DHT11PIN 3
 
 /***********************************************************************/
 /*                            Device flags                             */
@@ -71,15 +72,18 @@ int                 j, k, s              = 0;         // for ciklus valtozoja
 int                 relayComPin          = 0;
 byte                cycleVar             = 0;
 
+// DHT11 variables
 float               dhtTemp              = 0;
 float               dhtHum               = 0;
+float               dhtFah               = 0;
+
+//BMP085 variables
 long                bmpPres              = 0;
 float               bmpPreshPa           = 0;
-
-float               dhtFah               = 0;
 float               bmpTemp              = 0;
 float               bmpSeaLev            = 0;
 float               bmpRealAlt           = 0;
+
 byte                relayBuff            = B00000000; // kimeno rele vezerlo adatbajt
 
 DateTime            now;

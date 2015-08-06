@@ -2,6 +2,7 @@
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
 #include "RTClib.h"
+#include <dht11.h>
 #include <Adafruit_BMP085.h>
 
 // This headers for SPI connection to the wireless connction with NRF24L01
@@ -14,6 +15,7 @@
 #include "device_init.h"
 #include "wireless.h"
 #include "sensorBMP085.h"
+#include "sensorDHT11.h"
 #include "lcdDisplay.h"
 #include "serialData.h"
 
@@ -24,6 +26,7 @@
 2015.07.22 [Modul]: nRF modul fuggvenyeinek atalakitasa => wireless.h
 2015.07.24 [Modul]: create headers for methods of LCDDisplay, BMP085 sensor
 2015.07.27 [Modification]: Delete all code in connection with GPS module
+2015.08.06 [Modification]: Add DHT11 sensor 
 */
 
 /************************** Setup *******************************/
@@ -55,6 +58,7 @@ void loop(){
   printLCDData();
   processPacket();
   getSensorData();
+  readDHTValues();
   printSerialData();
   if (commComp) {
     for ( k = 0; k < s; k++ ){
