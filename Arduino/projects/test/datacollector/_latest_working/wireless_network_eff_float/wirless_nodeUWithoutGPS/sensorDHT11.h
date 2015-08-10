@@ -12,6 +12,7 @@ float convertFahrenheit(int celsius){
 
 /****************** DHT value ***********************/
 void readDHTValues(){
+  int chk = DHT11.read(DHT11PIN);
   dhtTemp = DHT11.temperature;
   dhtHum = DHT11.humidity;
   dhtFah = convertFahrenheit(dhtTemp);

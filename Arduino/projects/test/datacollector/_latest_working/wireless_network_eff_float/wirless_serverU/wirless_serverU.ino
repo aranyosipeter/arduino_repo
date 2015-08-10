@@ -32,9 +32,10 @@ void setup(){
 
 /******************************************* Loop ***********************************/
 void loop(){
-  printDataSerial();
-  delay(5000);
-  sendPacket();
+  if (dataRec) {
+     printDataSerial();
+     dataRec = false;
+  }
   // Flag of connection fail is set!
   ///*( my_conn.is_available() == 0 ) ||*/
   /*

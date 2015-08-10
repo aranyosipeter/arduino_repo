@@ -6,6 +6,6 @@
 
 void blinkYellowOnTime(){
  digitalWrite(YELLOWLED, LOW);
- delay(500);
+ delay(1000);
  digitalWrite(YELLOWLED, HIGH);
 }

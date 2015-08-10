@@ -131,6 +131,30 @@ void printLCDData(){
     lcd.setCursor(11,1);
     lcd.print(" m");
     break;
+  case 4: 
+    lcd.setCursor(3,1);
+    lcd.print("T: ");
+    lcd.setCursor(6,1);
+    lcd.print(dhtTemp, 1);
+    lcd.setCursor(11,1);
+    lcd.print(" C");
+    break;
+  case 5: 
+    lcd.setCursor(3,1);
+    lcd.print("H: ");
+    lcd.setCursor(6,1);
+    lcd.print(dhtHum, 1);
+    lcd.setCursor(11,1);
+    lcd.print(" %");
+    break;
+  case 6: 
+    lcd.setCursor(3,1);
+    lcd.print("F: ");
+    lcd.setCursor(6,1);
+    lcd.print(dhtFah, 1);
+    lcd.setCursor(11,1);
+    lcd.print(" F");
+    break;
   default:
     cycleVar = 0;
   }    

@@ -18,7 +18,8 @@
 #define  LED_OFF  0
 #define  LED_ON  1
 
-#define DataScreenChange 5000
+#define DataScreenChange 8000
+#define DataSendingTimer 10000
 #define IRQ 2
 #define DHT11PIN 3
 

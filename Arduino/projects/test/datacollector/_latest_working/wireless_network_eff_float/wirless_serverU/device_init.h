@@ -23,7 +23,7 @@ void commInit(){
 /*************************************** Mirf init *********************************************/
 void mirfInit(){
   Mirf.payload = 32;
-  Mirf.channel = 82;
+  Mirf.channel = 80;
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();
   Mirf.setRADDR((byte *)"servU");

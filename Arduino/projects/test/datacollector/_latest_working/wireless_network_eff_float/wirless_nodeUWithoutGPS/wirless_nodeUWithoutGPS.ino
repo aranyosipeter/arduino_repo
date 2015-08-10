@@ -39,7 +39,7 @@ void setup()  {
   if (lcdInit())  displayInit = true;
   if (rtcInit())  realTimeClockInit = true;
   if (mirfInit()) wirelessModInit = true; 
-  if (bmpInit())  sensorInit = true;
+  if (bmpInit() || dhtInit())  sensorInit = true;
  
   if (!sensorInit) systemInit = false;
   
@@ -68,6 +68,10 @@ void loop(){
     commandProc();
     commComp = false;
     s = 0;
+  }
+  if (millis() > (tmpTimer + DataSendingTimer)) {
+    tmpTimer = millis();
+    sendPacket();
   }
 }
 

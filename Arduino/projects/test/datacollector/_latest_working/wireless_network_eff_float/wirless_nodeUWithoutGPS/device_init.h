@@ -23,7 +23,7 @@ boolean bmpInit(){
 }
 
 /********************** DHT11 Check **************************/
-boolean DHT11Check(){
+boolean dhtInit(){
   boolean returnValue = true;
   int chk = DHT11.read(DHT11PIN);
   
@@ -66,7 +66,7 @@ boolean rtcInit(){
 /******************* Initalizing MiRF ************************/
 boolean mirfInit(){
   Mirf.payload = 32;
-  Mirf.channel = 82;
+  Mirf.channel = 80;
   Mirf.csnPin = 14;
   Mirf.cePin = 15;
   Mirf.spi = &MirfHardwareSpi;
