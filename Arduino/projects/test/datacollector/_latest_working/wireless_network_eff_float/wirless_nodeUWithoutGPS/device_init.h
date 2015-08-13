@@ -65,7 +65,7 @@ boolean rtcInit(){
 
 /******************* Initalizing MiRF ************************/
 boolean mirfInit(){
-  Mirf.payload = 32;
+  Mirf.payload = 16;
   Mirf.channel = 80;
   Mirf.csnPin = 14;
   Mirf.cePin = 15;

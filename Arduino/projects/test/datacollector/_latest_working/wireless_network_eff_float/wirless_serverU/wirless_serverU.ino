@@ -21,9 +21,8 @@ void setup(){
   pinMode(IRQ, INPUT);
   pinMode(GREENLED, OUTPUT);
   pinMode(YELLOWLED, OUTPUT);
-  digitalWrite(YELLOWLED, HIGH);
   mirfInit();
-  attachInterrupt(0, getPacket, LOW);
+  attachInterrupt(0, sendResponse, LOW);
   Serial.begin(9600);
   //Ethernet.begin(mac_addr);
   //commInit();
@@ -32,17 +31,12 @@ void setup(){
 
 /******************************************* Loop ***********************************/
 void loop(){
-  if (dataRec) {
-     printDataSerial();
-     dataRec = false;
-  }
   // Flag of connection fail is set!
   ///*( my_conn.is_available() == 0 ) ||*/
   /*
   if (( my_conn.is_connected() == 0 )){
     Serial.println("Problem with connection!");
     connectionFail = true;
-    digitalWrite(YELLOWLED, HIGH);
     digitalWrite(GREENLED, LOW);
   }
   // Method of reconnecting
@@ -57,6 +51,16 @@ void loop(){
       digitalWrite(GREENLED, HIGH);
     }
   } 
+  */
+   
+  if (dataRec) {
+    detachInterrupt(0);
+    printDataSerial();
+    dataRec = false;
+    attachInterrupt(0, sendResponse, LOW);
+  }
+   
+  /*
   if ( dataRec == true ){
     detachInterrupt(0);
     if (connectionFail == false){

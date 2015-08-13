@@ -2,6 +2,7 @@
 
 /*
 2015.07.27 [Modification]: Delete all variables/constans in connection with GPS module
+2015.08.13 [Mod]: Timers for getting packets
 */
 
 // Defining LCD pins
@@ -45,6 +46,8 @@ unsigned long      time                    = 0;
 unsigned long      timeOut                 = 0;
 unsigned long      clearTime               = 0;
 unsigned long      clearPrevTime           = 0;
+unsigned long      updateTimer             = 0;
+long               updateTime              = 15000;
 
 /************************* Flags *******************/
 
@@ -74,8 +77,8 @@ int                 relayComPin          = 0;
 byte                cycleVar             = 0;
 
 // DHT11 variables
-float               dhtTemp              = 0;
-float               dhtHum               = 0;
+int                 dhtTemp              = 0;
+int                 dhtHum               = 0;
 float               dhtFah               = 0;
 
 //BMP085 variables
@@ -101,8 +104,8 @@ byte                receiveCommand         = B00000000;
 byte                receiveID              = B00000000;
 
 /******************* Buffers for the transreceiver *****************/
-float               txbuff[7];                        // kuldesre varo adatok tombje
-float               rxbuff[7];                        // bejovo adatok tombje
+byte                txbuff[15];                        // kuldesre varo adatok tombje
+byte                rxbuff[15];                        // bejovo adatok tombje
 
 
 

@@ -32,7 +32,7 @@
 /************************** Setup *******************************/
 void setup()  {
   pinMode(IRQ, INPUT);
-  attachInterrupt(0, sendResponse, LOW);
+  attachInterrupt(0, getPacket, LOW);
   Wire.begin();
   Serial.begin(9600);
   
@@ -53,10 +53,9 @@ void setup()  {
 }
 
 /************************** Loop *******************************/
-void loop(){ 
+void loop(){
   printRealTime();
   printLCDData();
-  processPacket();
   getSensorData();
   readDHTValues();
   printSerialData();
@@ -69,9 +68,9 @@ void loop(){
     commComp = false;
     s = 0;
   }
-  if (millis() > (tmpTimer + DataSendingTimer)) {
-    tmpTimer = millis();
+  
+  if (millis() >= (updateTimer + updateTime)){
+    updateTimer = millis();
     sendPacket();
   }
 }
-

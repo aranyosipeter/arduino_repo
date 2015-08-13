@@ -22,7 +22,7 @@ void commInit(){
 
 /*************************************** Mirf init *********************************************/
 void mirfInit(){
-  Mirf.payload = 32;
+  Mirf.payload = 16;
   Mirf.channel = 80;
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();

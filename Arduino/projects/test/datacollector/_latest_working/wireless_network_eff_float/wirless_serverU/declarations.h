@@ -2,6 +2,7 @@
 
 /*
 2015.07.27 [Modification]: Delete all variables/constans in connection with GPS module
+2015.08.13 [Mod]: Timers for getting packets
 */
 
 
@@ -15,6 +16,7 @@
 short               tries                = 0;
 unsigned long       timerValue           = 0;
 unsigned long       timer                = 0;
+long                updateTime           = 15000;
 
 /*********************************************************************************************************/
 /*                                                 Codes                                                 */
@@ -35,8 +37,8 @@ char                results[20];
 /*                                             Measured data                                             */
 /*********************************************************************************************************/
 // DHT11 
-float               dhtTemp              = 0;
-float               dhtHum               = 0;
+byte                dhtTemp              = 0;
+byte                dhtHum               = 0;
 
 //BMP085
 float               bmpTemp              = 0;
