@@ -36,7 +36,7 @@ boolean            wirelessModInit   = false;
 /***********************************************************************/
 /*                          Device settings                            */
 /***********************************************************************/
-boolean            debugFlag         = false;
+boolean            debugFlag         = true;
 
 /******************** Timer values *****************/
 

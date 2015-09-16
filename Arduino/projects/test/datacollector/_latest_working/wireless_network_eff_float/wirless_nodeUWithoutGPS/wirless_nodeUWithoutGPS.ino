@@ -32,9 +32,9 @@
 /************************** Setup *******************************/
 void setup()  {
   pinMode(IRQ, INPUT);
-  attachInterrupt(0, getPacket, LOW);
   Wire.begin();
   Serial.begin(9600);
+  attachInterrupt(0, getPacket, LOW);
   
   if (lcdInit())  displayInit = true;
   if (rtcInit())  realTimeClockInit = true;
@@ -50,15 +50,19 @@ void setup()  {
     }
     while(1);
   }
+   Serial.println("Controller started!");
 }
 
 /************************** Loop *******************************/
 void loop(){
-  printRealTime();
-  printLCDData();
+  /*if (dataRec){
+    if (debugFlag) Serial.println("Data processed!");
+    dataRec = false;
+  }*/
   getSensorData();
   readDHTValues();
-  printSerialData();
+  printRealTime();
+  printLCDData();
   if (commComp) {
     for ( k = 0; k < s; k++ ){
     Serial.print(command[k]);  
@@ -71,6 +75,12 @@ void loop(){
   
   if (millis() >= (updateTimer + updateTime)){
     updateTimer = millis();
-    sendPacket();
+    if ((sendPacket()) && (debugFlag)){
+      printSerialData();
+      Serial.println("<===============================>");
+      Serial.println("Data sent!");
+      Serial.println("<===============================>");
+    }
   }
 }
+

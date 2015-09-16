@@ -61,7 +61,7 @@ void commandProc(){
 
 /******************************************- Serial data ************************************/
 void printSerialData(){
-  if ( serialDataFlag == true && dataRec == true){
+  if ( serialDataFlag){
     Serial.print("Paratartalom: ");
     Serial.print(dhtHum, DEC);
     Serial.println(" %");
@@ -70,8 +70,7 @@ void printSerialData(){
     Serial.println(" C");
     Serial.print("Legnyomas: ");
     Serial.print(bmpPreshPa, DEC);
-    Serial.println(" kPa");
-    dataRec = false;  
+    Serial.println(" kPa");  
   }
   
 }
