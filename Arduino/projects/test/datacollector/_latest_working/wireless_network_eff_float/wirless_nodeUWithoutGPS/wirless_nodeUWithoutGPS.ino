@@ -27,6 +27,7 @@
 2015.07.24 [Modul]: create headers for methods of LCDDisplay, BMP085 sensor
 2015.07.27 [Modification]: Delete all code in connection with GPS module
 2015.08.06 [Modification]: Add DHT11 sensor 
+2015.09.16. [Performance] Use F() function to store strings in progmem
 */
 
 /************************** Setup *******************************/
@@ -50,15 +51,11 @@ void setup()  {
     }
     while(1);
   }
-   Serial.println("Controller started!");
+   Serial.println(F("Controller started!"));
 }
 
 /************************** Loop *******************************/
 void loop(){
-  /*if (dataRec){
-    if (debugFlag) Serial.println("Data processed!");
-    dataRec = false;
-  }*/
   getSensorData();
   readDHTValues();
   printRealTime();
@@ -72,14 +69,10 @@ void loop(){
     commComp = false;
     s = 0;
   }
-  
   if (millis() >= (updateTimer + updateTime)){
     updateTimer = millis();
     if ((sendPacket()) && (debugFlag)){
-      printSerialData();
-      Serial.println("<===============================>");
-      Serial.println("Data sent!");
-      Serial.println("<===============================>");
+      Serial.println(F("Data sent!"));
     }
   }
 }

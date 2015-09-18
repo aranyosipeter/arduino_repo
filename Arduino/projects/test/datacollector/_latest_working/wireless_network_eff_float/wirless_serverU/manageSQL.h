@@ -1,10 +1,10 @@
 // Manage SQL queries
 
 /*
-
+2015.09.16. [Performance] Use F() function to store strings in progmem
 */
 
-/*********************************** Data log to SQL database *********************************
+/*********************************** Data log to SQL database **********************************/
 void dataLogSQL(){
     char query[64];
     for(int i = 0; i < 8; i++) {
@@ -30,19 +30,14 @@ void dataLogSQL(){
         case 6: 
           sprintf(query, UPDATE, buttonValue, i);
           break;
-        case 7: 
-          sprintf(query, UPDATE, val, i);
-          break;
+        //case 7: 
+        //  sprintf(query, UPDATE, val, i);
+        //  break;
       }
       my_conn.cmd_query(query);
       delay(250);
     }
-    sprintf(query, SELECT_RELAY);
-    my_conn.cmd_query(query);
-    my_conn.show_results(results);
-    Serial.println(results);
-    Serial.println();
-    Serial.println("UPDATED!!");
-}*/
+    Serial.println(F("UPDATED!!"));
+}
 
 

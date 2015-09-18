@@ -2,6 +2,7 @@
 
 /*
 2015.08.06 [General]: Created/add header file => copy existed functions
+2015.09.16. [Performance] Use F() function to store strings in progmem
 */
 
 
@@ -18,13 +19,13 @@ void readDHTValues(){
   dhtFah = convertFahrenheit(dhtTemp);
   
   if (serialDataFlag){
-    Serial.print("Humidity (%): ");
+    Serial.print(F("Humidity (%): "));
     Serial.println(dhtHum, DEC);
  
-    Serial.print("Temperature (oC): ");
+    Serial.print(F("Temperature (oC): "));
     Serial.println(dhtTemp, DEC);
  
-    Serial.print("Temperature (oF): ");
+    Serial.print(F("Temperature (oF): "));
     Serial.println(dhtFah, 2);
     Serial.println("\n");
   }

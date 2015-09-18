@@ -35,13 +35,13 @@ boolean sendPacket(){
 
 /****************** Filling up server data *******************/
 void getPacket(){
-  if (Mirf.dataReady() == true){
+  /*if (Mirf.dataReady() == true){
     Mirf.getData((byte *) &rxbuff);
   
     receiveID      = rxbuff[0];
     receiveCommand = rxbuff[1];
     updateTime     = (rxbuff[2] * 1000);
-  }
+  }*/
 }
 
 /********************* Set IRQ flag ***********************/

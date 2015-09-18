@@ -3,6 +3,7 @@
 /*
 2015.07.24 [General]: Created/add header file => copy existed functions
 2015.07.27 [Modification]: Delete all code in connection with GPS module
+2015.09.16. [Performance] Use F() function to store strings in progmem
 */
 
 /**************************************************************************/
@@ -16,18 +17,18 @@ void getSensorData(){
   bmpSeaLev = ((float)bmp.readSealevelPressure(124)) / 100;
   
   if (debugFlag) {
-    Serial.print("Temperature = ");
+    Serial.print(F("Temperature = "));
     Serial.print((float)bmpTemp, 2);
-    Serial.println(" *C");
-    Serial.print("Pressure = ");
+    Serial.println(F(" *C"));
+    Serial.print(F("Pressure = "));
     Serial.print(bmpPres, DEC);
-    Serial.println(" Pa");
-    Serial.print("Sea level = ");
+    Serial.println(F(" Pa"));
+    Serial.print(F("Sea level = "));
     Serial.print((float)bmpSeaLev, 2);
-    Serial.println(" hPa");
-    Serial.print("Real altitude = ");
+    Serial.println(F(" hPa"));
+    Serial.print(F("Real altitude = "));
     Serial.print((float)bmpRealAlt, 2);
-    Serial.println(" meters");
+    Serial.println(F(" meters"));
     Serial.println("\n");
   } 
 }

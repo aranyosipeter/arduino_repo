@@ -14,7 +14,7 @@ void processData(byte presRo, byte presFrac, byte tempRo, byte tempFrac, byte se
 }
 
 /******************************* Function for sending packet ***********************************/
-void sendPacket(/*byte mode*/){
+boolean sendPacket(/*byte mode*/){
     byte txbuff[15];
     //if (mode == 0) {
       txbuff[0] = devID;
@@ -36,9 +36,11 @@ void sendPacket(/*byte mode*/){
       txbuff[6] = 0;
       txbuff[7] = 0;
     }*/
-    Mirf.send((byte *)&txbuff);
+     Mirf.send((byte *)&txbuff);
     while(Mirf.isSending()){
     }
+    if (!Mirf.isSending()) return true; 
+    else return false;
 }
 
 /*********************************** Filling up server data **********************************/

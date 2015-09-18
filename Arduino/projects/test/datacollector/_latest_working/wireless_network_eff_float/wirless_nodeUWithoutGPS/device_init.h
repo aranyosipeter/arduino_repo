@@ -2,6 +2,7 @@
 
 /*
 2015.07.27 [Modification]: Delete all code in connection with GPS module
+2015.09.16. [Performance] Use F() function to store strings in progmem
 */
 
 // LCD display connection
@@ -27,21 +28,21 @@ boolean dhtInit(){
   boolean returnValue = true;
   int chk = DHT11.read(DHT11PIN);
   
-  if (serialDataFlag) Serial.print("Read sensor: ");
+  if (serialDataFlag) Serial.print(F("Read sensor: "));
   switch (chk){
     case 0:
-      if (serialDataFlag) Serial.println("OK");
+      if (serialDataFlag) Serial.println(F("OK"));
       break;
     case -1: 
-      if (serialDataFlag) Serial.println("Checksum error"); 
+      if (serialDataFlag) Serial.println(F("Checksum error")); 
       returnValue = false;
       break;
     case -2: 
-      if (serialDataFlag) Serial.println("Time out error"); 
+      if (serialDataFlag) Serial.println(F("Time out error")); 
       returnValue = false;
       break;
     default: 
-      if (serialDataFlag) Serial.println("Unknown error");
+      if (serialDataFlag) Serial.println(F("Unknown error"));
       returnValue = false; 
       break;
     }

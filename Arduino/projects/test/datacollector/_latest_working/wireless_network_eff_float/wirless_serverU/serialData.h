@@ -2,30 +2,31 @@
 
 /*
 2015.08.03. [General] Create header
+2015.09.16. [Performance] Use F() function to store strings in progmem
 */
 
 /*********************************************************************************************************/
 /*                                    Write out received datas                                           */
 /*********************************************************************************************************/
 void printDataSerial(){
-  Serial.print("ID: ");
+  Serial.print(F("ID: "));
   Serial.println(receiveID);
   
-  Serial.print("Command: ");
+  Serial.print(F("Command: "));
   Serial.println(receiveCommand);
   
-  Serial.print("Temp: ");
+  Serial.print(F("Temp: "));
   Serial.println(dhtTemp);
   
-  Serial.print("Humidity: ");
+  Serial.print(F("Humidity: "));
   Serial.println(dhtHum);
   
-  Serial.print("Pressure: ");
+  Serial.print(F("Pressure: "));
   Serial.println(bmpPreshPa);
   
-  Serial.print("BMPTemp: ");
+  Serial.print(F("BMPTemp: "));
   Serial.println(bmpTemp);
   
-  Serial.print("Sea level pressure: ");
+  Serial.print(F("Sea level pressure: "));
   Serial.println(bmpSeaLev);
 }
