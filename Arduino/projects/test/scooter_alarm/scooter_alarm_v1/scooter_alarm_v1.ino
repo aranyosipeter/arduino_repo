@@ -3,12 +3,16 @@
 #include "Wire.h"
 #include  <math.h>
 
+// GSM functions
+#include  <gsm_module.h>
+
 // GSM Comm
 #include "SIM900.h"
 #include <SoftwareSerial.h>
 #include "sms.h"
 #include "call.h"
 
+// Gyroscope
 MPU6050 accelgyro;
 CallGSM call;
 SMSGSM  sms;
@@ -52,16 +56,14 @@ void loop() {
   ComplementaryFilter(acce, giro, &axisY, &axisX);
 }
 
-//I/O init
+// I/O init
 void IOInit(){
   pinMode(IRQ, INPUT);
   pinMode(LED, OUTPUT);
   pinMode(RESET, OUTPUT);
 }
 
-// 
-
-/******** Complementary Filter written by Pieter-Jan Van de Maele ********/
+// Complementary Filter written by Pieter-Jan Van de Maele 
 void ComplementaryFilter(int16_t accData[3], int16_t gyrData[3], float *roll, float *pitch){ 
   float pitchAcc, rollAcc;               
     // Integrate the gyroscope data -> int(angularSpeed) = angle
