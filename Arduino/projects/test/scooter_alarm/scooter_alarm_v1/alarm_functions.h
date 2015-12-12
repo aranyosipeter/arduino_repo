@@ -3,6 +3,7 @@
 #define PIEZZO                    3
 
 #define ALARMTIME                 60000
+#define ARMINGTIME                30000
 
 // I/O init
 void IOInit(){
@@ -11,15 +12,29 @@ void IOInit(){
   pinMode(PIEZZO, OUTPUT);
 }
 
-void savePosition(){
-  
+void saveGyroPosition(){
+  if (armState){
+    if (!armTimeSaved) armStartedTime = glbTimer; // nagyonkerdeses...
+    if ((armStartedTime + ARMINGTIME) < glbTimer){
+      armedGyroStateX = 
+      systemArmed = true;
+    }
+  }
 }
 
-boolean checkPosition(){
+boolean checkGyroPosition(){
 }
 
 
 void drivePiezzo(){
   mills = millis()
-  //if (alarmFlag && )
+  //if (alarmState && )
+}
+
+void resetAlarmFlags(){
+  if (!systemArmed) {
+    alarmState = false;
+    sirenState = false;
+    armTimeSaved = false;
+  }
 }
