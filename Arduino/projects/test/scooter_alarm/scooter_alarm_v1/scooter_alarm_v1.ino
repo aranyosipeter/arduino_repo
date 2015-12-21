@@ -10,11 +10,17 @@
 #include "sms.h"
 #include "call.h"
 
-//GSM functions
-#include  "gsm_module.h"
+//EEPROM
+#include <EEPROM.h>
 
 //Gyroscope functions
 #include  "gyro_module.h"
+
+//GSM functions
+#include  "gsm_module.h"
+
+//Store in EEPROM functions
+#include  "store_functions.h"
 
 //Alarm functions
 #include  "alarm_functions.h"
@@ -52,15 +58,18 @@ boolean        armTimeSaved      = false;
 
 void setup() {
   Serial.begin(38400);
-  IOInit();
-  gyroInit();
-  gsmInit();
+  initIO();
+  initGyro();
+  initGSM();
 }
 
 void loop() {
   glbTime = millis();
-  checkIncomingCallToArmOrDisarm(ARMNUMBER, armFlag);
-  calculateGyroscopeData(axisX, axisY);
+  if (setSystemStateByIncomingGSMCalls(ARMNUMBER, armFlag)) {
+    if (setTimingToArmSystem()) {
+    } 
+  }
+   
   //delay(500);
 }
 

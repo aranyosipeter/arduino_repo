@@ -6,20 +6,17 @@
 #define ARMINGTIME                30000
 
 // I/O init
-void IOInit(){
+void initIO(){
   pinMode(IRQ, INPUT);
   pinMode(LED, OUTPUT);
   pinMode(PIEZZO, OUTPUT);
 }
 
-void saveGyroPosition(){
-  if (armState){
-    if (!armTimeSaved) armStartedTime = glbTimer; // nagyonkerdeses...
-    if ((armStartedTime + ARMINGTIME) < glbTimer){
-      armedGyroStateX = 
-      systemArmed = true;
-    }
-  }
+boolean saveGyroPosition(float x, float y){
+  calculateGyroscopeData(x, y);
+  armedGyroStateX = x;
+  armedGyroStateY = y;
+  return true;
 }
 
 boolean checkGyroPosition(){
@@ -29,6 +26,24 @@ boolean checkGyroPosition(){
 void drivePiezzo(){
   mills = millis()
   //if (alarmState && )
+}
+
+boolean setTimingToArmSystem(){
+  if (armState){
+    if (!armTimeSaved) {
+      armStartedTime = glbTimer; // nagyonkerdeses...
+      armTimeSaved = true;
+    }
+    if ((armStartedTime + ARMINGTIME) < glbTimer){
+      if (saveGyroPosition(axisX, axisY)){
+        systemArmed = true;
+        armState = false;
+        return true;
+      }
+      else return false;
+    }
+    else return false;
+  }
 }
 
 void resetAlarmFlags(){
