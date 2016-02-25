@@ -5,6 +5,8 @@ MPU6050 accelgyro;
 #define GYROSCOPE_SENSITIVITY     65.536 
 #define M_PI                      3.14159265359	     
 #define dt                        0.01	
+
+int16_t giro
  
 void initGyro(){
   Serial.println("Initializing I2C gyroscope...");

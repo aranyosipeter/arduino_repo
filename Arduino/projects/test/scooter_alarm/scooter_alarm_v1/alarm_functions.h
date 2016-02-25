@@ -53,3 +53,7 @@ void resetAlarmFlags(){
     armTimeSaved = false;
   }
 }
+
+void disArmSystem() {
+  if (!armState) resetAlarmFlags();
+}

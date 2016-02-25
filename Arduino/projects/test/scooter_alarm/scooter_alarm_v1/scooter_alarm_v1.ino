@@ -69,6 +69,7 @@ void loop() {
     if (setTimingToArmSystem()) {
     } 
   }
+  disArmSystem();
    
   //delay(500);
 }
